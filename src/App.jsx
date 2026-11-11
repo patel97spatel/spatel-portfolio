@@ -19,8 +19,11 @@ import {
   Mail,
   Menu,
   MessageCircle,
+  Moon,
+  Palette,
   Phone,
   Send,
+  Sun,
   Terminal,
   X,
 } from 'lucide-react'
@@ -43,6 +46,13 @@ const navigation = [
   ['Projects', 'projects'],
   ['Writing', 'writing'],
   ['Contact', 'contact'],
+]
+
+const themeAccents = [
+  { id: 'violet', label: 'Violet', color: '#aa91ff' },
+  { id: 'blue', label: 'Blue', color: '#75a9ff' },
+  { id: 'teal', label: 'Teal', color: '#6dd6c2' },
+  { id: 'rose', label: 'Rose', color: '#ff8caa' },
 ]
 
 const currentYear = new Date().getFullYear()
@@ -429,6 +439,13 @@ const projectCategories = [
 function App() {
   const reduceMotion = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [themePickerOpen, setThemePickerOpen] = useState(false)
+  const [colorMode, setColorMode] = useState(() => window.localStorage.getItem('portfolio-color-mode') === 'light' ? 'light' : 'dark')
+  const [accentColor, setAccentColor] = useState(() => {
+    const savedAccent = window.localStorage.getItem('portfolio-accent')
+    return themeAccents.some(({ id }) => id === savedAccent) ? savedAccent : 'violet'
+  })
+  const themePickerRef = useRef(null)
   const [skillsOpen, setSkillsOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [showAllProjects, setShowAllProjects] = useState(false)
@@ -443,6 +460,37 @@ function App() {
   const whatsappUrl = `https://wa.me/${profile.whatsapp}?text=${encodeURIComponent(
     'Hello Sanjay, I visited your portfolio and would like to connect.',
   )}`
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = colorMode
+    document.documentElement.dataset.accent = accentColor
+    window.localStorage.setItem('portfolio-color-mode', colorMode)
+    window.localStorage.setItem('portfolio-accent', accentColor)
+  }, [colorMode, accentColor])
+
+  useEffect(() => {
+    if (!themePickerOpen) return
+
+    function closePickerOnOutsideClick(event) {
+      if (themePickerRef.current && !themePickerRef.current.contains(event.target)) {
+        setThemePickerOpen(false)
+      }
+    }
+
+    function closePickerOnEscape(event) {
+      if (event.key === 'Escape') {
+        setThemePickerOpen(false)
+        themePickerRef.current?.querySelector('button')?.focus()
+      }
+    }
+
+    document.addEventListener('pointerdown', closePickerOnOutsideClick)
+    document.addEventListener('keydown', closePickerOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closePickerOnOutsideClick)
+      document.removeEventListener('keydown', closePickerOnEscape)
+    }
+  }, [themePickerOpen])
 
   useEffect(() => {
     document.body.classList.toggle('dialog-open', Boolean(selectedProject || skillsOpen || challengeOpen))
@@ -501,17 +549,72 @@ function App() {
             type="button"
             aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
+            onClick={() => {
+              setMenuOpen((open) => !open)
+              setThemePickerOpen(false)
+            }}
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <nav className={menuOpen ? 'main-nav is-open' : 'main-nav'} aria-label="Main navigation">
             {navigation.map(([label, id]) => (
-              <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>{label}</a>
+              <a key={id} href={`#${id}`} onClick={() => { setMenuOpen(false); setThemePickerOpen(false) }}>{label}</a>
             ))}
-            <a className="nav-cta" href="#contact" onClick={() => setMenuOpen(false)}>
+            <a className="nav-cta" href="#contact" onClick={() => { setMenuOpen(false); setThemePickerOpen(false) }}>
               Let’s talk <ArrowUpRight size={14} />
             </a>
+            <div className="theme-picker" ref={themePickerRef}>
+              <button
+                className="theme-picker-trigger"
+                type="button"
+                aria-expanded={themePickerOpen}
+                aria-controls="theme-picker-panel"
+                onClick={() => setThemePickerOpen((open) => !open)}
+              >
+                <Palette size={15} />
+                <span>Theme</span>
+              </button>
+              {themePickerOpen && (
+                <div className="theme-picker-panel" id="theme-picker-panel" aria-label="Website theme settings">
+                  <p className="theme-picker-title">Appearance</p>
+                  <div className="theme-mode-options" role="group" aria-label="Color mode">
+                    <button
+                      className={colorMode === 'dark' ? 'is-active' : ''}
+                      type="button"
+                      aria-pressed={colorMode === 'dark'}
+                      onClick={() => setColorMode('dark')}
+                    >
+                      <Moon size={14} /> Dark
+                    </button>
+                    <button
+                      className={colorMode === 'light' ? 'is-active' : ''}
+                      type="button"
+                      aria-pressed={colorMode === 'light'}
+                      onClick={() => setColorMode('light')}
+                    >
+                      <Sun size={14} /> Light
+                    </button>
+                  </div>
+                  <p className="theme-picker-title">Accent color</p>
+                  <div className="theme-accent-options" role="group" aria-label="Accent color">
+                    {themeAccents.map(({ id, label, color }) => (
+                      <button
+                        key={id}
+                        className={accentColor === id ? 'is-active' : ''}
+                        type="button"
+                        aria-label={`${label} accent color`}
+                        aria-pressed={accentColor === id}
+                        title={label}
+                        style={{ '--swatch': color }}
+                        onClick={() => setAccentColor(id)}
+                      >
+                        {accentColor === id && <Check size={15} />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </header>
