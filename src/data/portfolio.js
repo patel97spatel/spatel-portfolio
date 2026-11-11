@@ -271,7 +271,7 @@ export const education = [
     short: 'MCA',
     institution: 'Institute of Management and Information Technology, Cuttack',
     period: '2018–2021',
-    result: '78%',
+    result: '80.3%',
   },
   {
     degree: 'Bachelor of Computer Application',

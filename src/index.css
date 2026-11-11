@@ -119,6 +119,8 @@ button { color: inherit; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 11px; margin-top: 31px; }
 .button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 0 15px; border: 1px solid transparent; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease; }
 .button:hover { transform: translateY(-2px); }
+.button:not(.browse-projects-button) > svg:last-child, .text-link > svg, .project-link > svg { transition: transform 180ms ease; }
+.button:not(.browse-projects-button):hover > svg:last-child, .button:not(.browse-projects-button):focus-visible > svg:last-child, .text-link:hover > svg, .text-link:focus-visible > svg, .project-link:hover > svg, .project-link:focus-visible > svg { transform: translate(2px, -2px); }
 .button-primary { border-color: var(--accent-text); color: #faf8ff; background: linear-gradient(110deg, var(--accent-deep), color-mix(in srgb, var(--accent-deep), #20202a 22%)); box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 8px 28px var(--accent-wash); }
 .button-primary:hover, .button-primary:focus-visible { border-color: var(--accent); background: linear-gradient(110deg, var(--accent-deep), color-mix(in srgb, var(--accent-deep), #20202a 10%)); box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), 0 8px 30px var(--accent-wash); }
 .button-quiet { border-color: rgba(235, 230, 255, 0.11); color: #d0cdd8; background: rgba(255, 255, 255, 0.025); }
@@ -128,7 +130,16 @@ button { color: inherit; }
 .hero-meta strong { color: #d5d0e0; font-weight: 500; }
 .meta-divider { width: 3px; height: 3px; border-radius: 50%; background: #5e596a; }
 
-.hero-visual { position: relative; min-height: 435px; display: grid; place-items: center; }
+.hero-visual { position: relative; min-height: 475px; display: grid; place-items: center; }
+.hero-code { position: absolute; inset: 5px 0 42px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; color: var(--accent-text); font-family: var(--mono); font-size: 10px; line-height: 1.5; opacity: 0.48; pointer-events: none; user-select: none; }
+.hero-code-block-end { align-self: flex-end; }
+.hero-code-line { display: block; width: fit-content; max-width: 100%; white-space: pre; clip-path: inset(0 100% 0 0); animation: hero-code-type 10s steps(30, end) infinite both; }
+.hero-code-line:nth-child(2) { animation-delay: 1s; }
+.hero-code-line:nth-child(3) { animation-delay: 2s; }
+.hero-code-line:nth-child(4) { animation-delay: 3s; }
+.hero-code-block-end .hero-code-line { animation-delay: 4s; }
+.hero-code-block-end .hero-code-line:nth-child(2) { animation-delay: 5s; }
+@keyframes hero-code-type { 0% { clip-path: inset(0 100% 0 0); } 20%, 75% { clip-path: inset(0 0 0 0); } 90%, 100% { clip-path: inset(0 100% 0 0); } }
 .profile-orbit { position: absolute; width: 405px; height: 405px; border: 1px solid rgba(172, 150, 255, 0.12); border-radius: 50%; }
 .orbit-two { width: 330px; height: 330px; border-color: rgba(112, 199, 255, 0.13); transform: rotate(24deg) scaleX(1.2); }
 .profile-card { position: relative; z-index: 1; width: 280px; padding: 18px 20px 15px; border: 1px solid rgba(225, 219, 255, 0.16); border-radius: 13px; background: radial-gradient(circle at 50% 43%, rgba(113, 90, 193, 0.22), transparent 45%), linear-gradient(145deg, rgba(34, 32, 45, 0.96), rgba(22, 22, 29, 0.97)); box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42), inset 0 1px rgba(255, 255, 255, 0.05); transform: rotate(-3deg); }
@@ -446,7 +457,7 @@ body.dialog-open .page-jump { display: none; }
   .hero h1 { font-size: clamp(30px, 7.5vw, 42px); }
   .hero-summary { max-width: 570px; font-size: 13px; }
   .hero-meta { gap: 9px; margin-top: 30px; font-size: 8px; }
-  .hero-visual { min-height: 378px; margin-top: 24px; scale: 0.9; }
+  .hero-visual { min-height: 470px; margin-top: 24px; scale: 0.9; }
   .connect-section { grid-template-columns: 1fr; gap: 16px; padding: 20px; }
   .profile-orbit { width: 340px; height: 340px; }
   .orbit-two { width: 285px; height: 285px; }
@@ -552,6 +563,7 @@ html[data-theme='light'] .hero-meta, html[data-theme='light'] .hero-visual-capti
 html[data-theme='light'] .connect-section, html[data-theme='light'] .about-note, html[data-theme='light'] .skill-card, html[data-theme='light'] .work-highlights, html[data-theme='light'] .project-card, html[data-theme='light'] .project-directory, html[data-theme='light'] .project-empty-state, html[data-theme='light'] .language-item, html[data-theme='light'] .writing-card, html[data-theme='light'] .contact-panel, html[data-theme='light'] .connect-detail, html[data-theme='light'] .connect-social, html[data-theme='light'] .profile-card, html[data-theme='light'] .floating-chip { border-color: rgba(43, 40, 56, 0.12); background: #ffffff; box-shadow: 0 12px 32px rgba(32, 29, 45, 0.06); }
 html[data-theme='light'] .connect-section, html[data-theme='light'] .contact-panel, html[data-theme='light'] .project-directory { background: radial-gradient(ellipse at 0% 0%, var(--accent-wash), transparent 55%), #ffffff; }
 html[data-theme='light'] .profile-card { border-color: var(--accent-wash); background: radial-gradient(circle at 50% 43%, var(--accent-wash), transparent 55%), linear-gradient(145deg, #ffffff, #f2f0f8); box-shadow: 0 24px 60px rgba(48, 39, 68, 0.15); }
+html[data-theme='light'] .hero-code { opacity: 0.55; }
 html[data-theme='light'] .profile-orbit { border-color: color-mix(in srgb, var(--accent-text) 20%, transparent); }
 html[data-theme='light'] .profile-card-rule { background: var(--line); }
 html[data-theme='light'] .live-mark, html[data-theme='light'] .project-footnote span, html[data-theme='light'] .achievement-check, html[data-theme='light'] .whatsapp-link svg:first-child { color: #28684d; }
@@ -610,4 +622,6 @@ html[data-theme='light'] ::selection { color: #ffffff; background: var(--accent-
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .hero-code-line { clip-path: none; animation: none; }
+  .button:not(.browse-projects-button):hover > svg:last-child, .button:not(.browse-projects-button):focus-visible > svg:last-child, .text-link:hover > svg, .text-link:focus-visible > svg, .project-link:hover > svg, .project-link:focus-visible > svg { transform: none; }
 }

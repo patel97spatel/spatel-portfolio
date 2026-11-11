@@ -656,7 +656,12 @@ function App() {
 
       <main id="main">
         <section className="hero section-shell" id="home">
-          <div className="hero-copy">
+          <motion.div
+            className="hero-copy"
+            initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.55 }}
+          >
             <p className="availability"><span className="availability-dot" /> Focused on backend &amp; database engineering</p>
             <p className="eyebrow hero-eyebrow">SOFTWARE ENGINEER <span>·</span> BACKEND SYSTEMS</p>
             <h1>Hi, I’m <span className="gradient-text">Sanjay Patel.</span><br />I build for the <span className="serif-accent">real world.</span></h1>
@@ -678,9 +683,21 @@ function App() {
               <span className="meta-divider" />
               <span>PHP <strong>·</strong> Laravel</span>
             </div>
-          </div>
+          </motion.div>
 
           <Reveal className="hero-visual">
+            <div className="hero-code" aria-hidden="true">
+              <div className="hero-code-block">
+                <span className="hero-code-line">const engineer = {'{'}</span>
+                <span className="hero-code-line">  focus: 'backend',</span>
+                <span className="hero-code-line">  stack: ['PHP', 'Laravel']</span>
+                <span className="hero-code-line">{'}'};</span>
+              </div>
+              <div className="hero-code-block hero-code-block-end">
+                <span className="hero-code-line">build({'{'} reliable: true {'}'})</span>
+                <span className="hero-code-line">// always learning</span>
+              </div>
+            </div>
             <div className="profile-orbit orbit-one" />
             <div className="profile-orbit orbit-two" />
             <div className="profile-card">
@@ -707,7 +724,15 @@ function App() {
           <a className="scroll-cue" href="#about"><span>SCROLL TO EXPLORE</span><ArrowDown size={14} /></a>
         </section>
 
-        <section className="section-shell connect-section" id="connect" aria-labelledby="connect-title">
+        <motion.section
+          className="section-shell connect-section"
+          id="connect"
+          aria-labelledby="connect-title"
+          initial={reduceMotion ? false : { opacity: 0, y: 22 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.16 }}
+          transition={{ duration: reduceMotion ? 0 : 0.55 }}
+        >
           <div className="connect-heading">
             <p className="eyebrow"><span>&gt;_</span> LET'S CONNECT</p>
             <h2 id="connect-title">Find me online<span>.</span></h2>
@@ -730,7 +755,7 @@ function App() {
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
 
         <div className="marquee-band" aria-label="Core technologies">
           <div className="marquee-track">
@@ -796,14 +821,14 @@ function App() {
               </Reveal>
             ))}
           </div>
-          <div className="work-highlights">
+          <Reveal className="work-highlights">
             <p className="eyebrow">RESPONSIBILITIES &amp; CONTRIBUTIONS</p>
             <div className="work-highlights-grid">
               {workHighlights.map((item, index) => (
                 <p className="work-highlight" key={item}><span>{String(index + 1).padStart(2, '0')}</span>{item}</p>
               ))}
             </div>
-          </div>
+          </Reveal>
         </section>
 
         <section className="section-shell section-block projects-section" id="projects">
@@ -817,7 +842,7 @@ function App() {
               ))}
             </AnimatePresence>
           </div>
-          <div className="project-archive-toggle">
+          <Reveal className="project-archive-toggle">
             <div className="project-count"><span>{projects.length.toString().padStart(2, '0')}</span> résumé-listed projects</div>
             <button
               className="button button-secondary browse-projects-button"
@@ -835,7 +860,7 @@ function App() {
               <Terminal size={15} /> {showAllProjects ? 'Show featured only' : `Browse all ${projects.length} projects`}
               <ArrowDown size={15} className={showAllProjects ? 'archive-chevron is-open' : 'archive-chevron'} />
             </button>
-          </div>
+          </Reveal>
 
           <AnimatePresence initial={false}>
             {showAllProjects && (
