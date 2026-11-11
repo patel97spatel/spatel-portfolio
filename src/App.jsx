@@ -6,6 +6,7 @@ import {
   ArrowDown,
   ArrowDownRight,
   ArrowRight,
+  ArrowUp,
   ArrowUpRight,
   BriefcaseBusiness,
   Camera,
@@ -56,6 +57,40 @@ const themeAccents = [
 ]
 
 const currentYear = new Date().getFullYear()
+
+function PageJump() {
+  const [goToTop, setGoToTop] = useState(false)
+
+  useEffect(() => {
+    function updateDirection() {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight
+      setGoToTop(scrollableHeight > 0 && window.scrollY >= scrollableHeight / 2)
+    }
+
+    updateDirection()
+    const observer = new ResizeObserver(updateDirection)
+    observer.observe(document.body)
+    window.addEventListener('scroll', updateDirection, { passive: true })
+    window.addEventListener('resize', updateDirection)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', updateDirection)
+      window.removeEventListener('resize', updateDirection)
+    }
+  }, [])
+
+  return (
+    <nav className="page-jump" aria-label="Page navigation">
+      <a
+        href={goToTop ? '#home' : '#page-bottom'}
+        aria-label={goToTop ? 'Go to top of page' : 'Go to bottom of page'}
+        title={goToTop ? 'Go to top' : 'Go to bottom'}
+      >
+        {goToTop ? <ArrowUp size={18} /> : <ArrowDown size={18} />}
+      </a>
+    </nav>
+  )
+}
 
 function CodeCursor() {
   const cursorRef = useRef(null)
@@ -963,12 +998,14 @@ function App() {
         </section>
       </main>
 
-      <footer className="site-footer section-shell">
+      <footer className="site-footer section-shell" id="page-bottom">
         <a className="brand footer-brand" href="#home"><span className="brand-mark">SP</span><span>sanjay<span className="brand-dot">.</span>dev</span></a>
         <p>Designed with intent. Built with care.</p>
         <a className="back-top" href="#home">Back to top <ArrowUpRight size={14} /></a>
         <span className="footer-year">© {currentYear} Sanjay Patel</span>
       </footer>
+
+      <PageJump />
 
       <SkillsDialog open={skillsOpen} onClose={closeSkills} />
       <ProjectDialog key={selectedProject?.id ?? 'closed'} project={selectedProject} onClose={closeProject} />
