@@ -308,7 +308,8 @@ export const languages = [
   { name: 'Sambalpuri', proficiency: 'Native' },
   { name: 'Hindi', proficiency: 'Fluent' },
   { name: 'English', proficiency: 'Professional working proficiency' },
-  { name: 'Bengali', proficiency: 'Basic conversational' },
+  { name: 'Bengoli', proficiency: 'Basic conversational' },
+  { name: 'Bhojpuri', proficiency: 'Standard' },
 ]
 
 export const blogTopics = [
