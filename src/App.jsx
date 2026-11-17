@@ -56,6 +56,15 @@ const themeAccents = [
   { id: 'rose', label: 'Rose', color: '#ff8caa' },
 ]
 
+const skillGroups = [
+  { name: 'Frontend', description: 'Accessible, responsive interfaces and reusable UI foundations.', icon: Palette },
+  { name: 'Backend', description: 'Application logic, APIs, databases and CMS integrations.', icon: Database },
+  { name: 'Tools', description: 'Version control, development environments and delivery tools.', icon: Terminal },
+  { name: 'AI', description: 'AI foundations, assisted workflows and tools I work with.', icon: Code2 },
+  { name: 'Data & Reporting', description: 'Organizing information, analyzing data and preparing reports.', icon: Contact },
+  { name: 'Engineering', description: 'Building, maintaining and improving dependable software.', icon: BriefcaseBusiness },
+]
+
 const currentYear = new Date().getFullYear()
 
 function PageJump() {
@@ -264,7 +273,7 @@ function SkillsDialog({ open, onClose }) {
             <div className="dialog-content skills-dialog-content">
               <p className="eyebrow">ENGINEERING TOOLKIT · {skills.length} SKILLS</p>
               <h2 id="skills-dialog-title">Skills explorer</h2>
-              <p className="skills-dialog-intro">A résumé-backed inventory of technical tools, delivery practices and core strengths.</p>
+              <p className="skills-dialog-intro">A categorized overview of technologies, AI tools and practical engineering experience.</p>
               <div className="skills-explorer">
                 <nav className="skill-filters" aria-label="Filter skills by category">
                   {groups.map((group) => (
@@ -784,18 +793,29 @@ function App() {
 
         <section className="section-shell section-block skills-section" id="skills">
           <Reveal>
-            <SectionHeading number="02" eyebrow="TOOLS OF MY TRADE" title="A practical toolkit." description="A snapshot of the technologies I use to build and support applications." />
+            <SectionHeading number="02" eyebrow="TOOLS OF MY TRADE" title="A practical toolkit." description="My skills, organized by discipline—from frontend and backend development to AI, data and day-to-day engineering." />
           </Reveal>
           <div className="skills-grid">
-            {skills.filter((skill) => skill.featured).map((skill, index) => (
-              <Reveal key={skill.name} delay={index * 0.025}>
-                <div className="skill-card">
-                  <span className="skill-icon">{skill.group === 'Databases' ? <Database size={17} /> : <Code2 size={17} />}</span>
-                  <span className="skill-name">{skill.name}</span>
-                  <span className="skill-group">{skill.group}</span>
-                </div>
-              </Reveal>
-            ))}
+            {skillGroups.map(({ name, description, icon: Icon }, index) => {
+              const groupSkills = skills.filter((skill) => skill.group === name)
+              return (
+                <Reveal key={name} delay={index * 0.04}>
+                  <article className="skill-card">
+                    <div className="skill-card-heading">
+                      <span className="skill-icon"><Icon size={17} /></span>
+                      <h3>{name}</h3>
+                      <span className="skill-count">{String(groupSkills.length).padStart(2, '0')}</span>
+                    </div>
+                    <p className="skill-description">{description}</p>
+                    <ul className="skill-tags">
+                      {groupSkills.map((skill) => (
+                        <li className="skill-tag" key={skill.name}>{skill.name}</li>
+                      ))}
+                    </ul>
+                  </article>
+                </Reveal>
+              )
+            })}
           </div>
           <button className="all-skills-button" type="button" onClick={() => setSkillsOpen(true)}>
             <Terminal size={15} /> Browse all {skills.length} skills <ArrowUpRight size={15} />
