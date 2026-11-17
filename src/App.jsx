@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import ProjectChallenge from './ProjectChallenge'
 import ProjectArtwork from './ProjectArtwork'
 import {
   ArrowDown,
@@ -332,7 +331,7 @@ function ProjectDialog({ project, onClose }) {
   const reduceMotion = useReducedMotion()
   const dialogRef = useRef(null)
   const [visibleLength, setVisibleLength] = useState(0)
-  const message = 'Thank you! Opening it for you.'
+  const message = 'Project details loaded.'
 
   useEffect(() => {
     if (!project) return undefined
@@ -428,7 +427,12 @@ function ProjectDialog({ project, onClose }) {
                 <div><span>PERIOD</span><strong>{project.period}</strong></div>
                 <div><span>DOMAIN / LOCATION</span><strong>{project.domain} · {project.location}</strong></div>
               </div>
-              <p className="case-study-note">The résumé does not specify project-level responsibilities or outcomes. Add those details when ready, and they can be included here.</p>
+              {project.url && (
+                <a className="project-dialog-link" href={project.url} target="_blank" rel="noopener noreferrer">
+                  Visit project website <ArrowUpRight size={15} />
+                </a>
+              )}
+              <p className="case-study-note">Project summary based on the project context and information currently available.</p>
             </div>
             <button className="button button-secondary dialog-close" type="button" onClick={onClose}>
               Back to projects <ArrowRight size={16} />
@@ -465,9 +469,16 @@ function ProjectCard({ project, index, onOpen, featured = false }) {
         {project.acronym && <p className="project-acronym">{project.acronym}</p>}
         <p className="project-card-description">{project.description}</p>
         <div className="project-stack"><span>{project.company}</span></div>
-        <button className="project-link" type="button" onClick={() => onOpen(project)}>
-          Open project file <ArrowRight size={15} />
-        </button>
+        <div className="project-card-actions">
+          <button className="project-link" type="button" onClick={() => onOpen(project)}>
+            View project details <ArrowRight size={15} />
+          </button>
+          {project.url && (
+            <a className="project-link project-external-link" href={project.url} target="_blank" rel="noopener noreferrer">
+              Live website <ArrowUpRight size={15} />
+            </a>
+          )}
+        </div>
       </div>
     </motion.article>
   )
@@ -475,9 +486,10 @@ function ProjectCard({ project, index, onOpen, featured = false }) {
 
 const projectCategories = [
   { id: 'All', label: 'All projects' },
-  { id: 'Company', label: 'Company projects' },
-  { id: 'Personal', label: 'Personal projects' },
-  { id: 'Other', label: 'Other projects' },
+  { id: 'Gemini', label: 'Gemini', heading: 'Gemini Consulting & Services India' },
+  { id: 'Westech', label: 'Westech', heading: 'Westech Technologies Pvt. Ltd.' },
+  { id: 'Essar', label: 'Essar', heading: 'Essar Systems & Gurukul Education Online Pvt. Ltd.' },
+  { id: 'Personal', label: 'Personal', heading: 'Independent project' },
 ]
 
 function App() {
@@ -493,8 +505,6 @@ function App() {
   const [skillsOpen, setSkillsOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [showAllProjects, setShowAllProjects] = useState(false)
-  const [challengeOpen, setChallengeOpen] = useState(false)
-  const [projectsUnlocked, setProjectsUnlocked] = useState(false)
   const [projectCategory, setProjectCategory] = useState('All')
   const [projectSearch, setProjectSearch] = useState('')
   const [messageSent, setMessageSent] = useState(false)
@@ -537,9 +547,9 @@ function App() {
   }, [themePickerOpen])
 
   useEffect(() => {
-    document.body.classList.toggle('dialog-open', Boolean(selectedProject || skillsOpen || challengeOpen))
+    document.body.classList.toggle('dialog-open', Boolean(selectedProject || skillsOpen))
     return () => document.body.classList.remove('dialog-open')
-  }, [selectedProject, skillsOpen, challengeOpen])
+  }, [selectedProject, skillsOpen])
 
   function handleContactSubmit(event) {
     event.preventDefault()
@@ -550,12 +560,6 @@ function App() {
 
   const closeProject = useCallback(() => setSelectedProject(null), [])
   const closeSkills = useCallback(() => setSkillsOpen(false), [])
-  const closeChallenge = useCallback(() => setChallengeOpen(false), [])
-  function unlockProjects() {
-    setProjectsUnlocked(true)
-    setShowAllProjects(true)
-    setChallengeOpen(false)
-  }
   const featuredProjects = projects.filter((project) => project.featured)
   const filteredProjects = projects.filter((project) => {
     const matchesCategory = projectCategory === 'All' || project.category === projectCategory
@@ -569,6 +573,13 @@ function App() {
     ].filter(Boolean).some((value) => value.toLowerCase().includes(query))
     return matchesCategory && matchesSearch
   })
+  const filteredProjectGroups = projectCategories.slice(1)
+    .map(({ id, heading }) => ({
+      id,
+      heading,
+      projects: filteredProjects.filter((project) => project.category === id),
+    }))
+    .filter(({ projects: groupProjects }) => groupProjects.length > 0)
   const messageUrl = `https://wa.me/${profile.whatsapp}?text=${encodeURIComponent(preparedMessage)}`
   const socialLinks = [
     profile.links.linkedin && { label: 'LinkedIn', href: profile.links.linkedin, Icon: Contact },
@@ -853,7 +864,7 @@ function App() {
 
         <section className="section-shell section-block projects-section" id="projects">
           <Reveal>
-            <SectionHeading number="04" eyebrow="PROJECT ARCHIVE" title="A few things I’ve helped build." description="Explore selected work from my professional experience, then open the full project archive to browse by category or search by name, company and domain." />
+            <SectionHeading number="04" eyebrow="PROJECT ARCHIVE" title="Project work by team." description="Selected work delivered at Gemini, Westech and Essar, alongside my independently designed and developed personal portfolio." />
           </Reveal>
           <div className="projects-grid">
             <AnimatePresence mode="sync">
@@ -863,18 +874,14 @@ function App() {
             </AnimatePresence>
           </div>
           <Reveal className="project-archive-toggle">
-            <div className="project-count"><span>{projects.length.toString().padStart(2, '0')}</span> résumé-listed projects</div>
+            <div className="project-count"><span>{projects.length.toString().padStart(2, '0')}</span> projects across company and personal work</div>
             <button
               className="button button-secondary browse-projects-button"
               type="button"
               aria-expanded={showAllProjects}
               aria-controls="all-projects"
               onClick={() => {
-                if (showAllProjects || projectsUnlocked) {
-                  setShowAllProjects((isOpen) => !isOpen)
-                } else {
-                  setChallengeOpen(true)
-                }
+                setShowAllProjects((isOpen) => !isOpen)
               }}
             >
               <Terminal size={15} /> {showAllProjects ? 'Show featured only' : `Browse all ${projects.length} projects`}
@@ -925,17 +932,30 @@ function App() {
                   })}
                 </div>
                 {filteredProjects.length > 0 ? (
-                  <div className="projects-grid directory-grid">
-                    <AnimatePresence mode="sync">
-                      {filteredProjects.map((project) => (
-                        <ProjectCard
-                          key={project.id}
-                          project={project}
-                          index={projects.indexOf(project)}
-                          onOpen={setSelectedProject}
-                        />
-                      ))}
-                    </AnimatePresence>
+                  <div className="project-directory-groups">
+                    {filteredProjectGroups.map(({ id, heading, projects: groupProjects }) => (
+                      <section className="project-group" key={id} aria-labelledby={`project-group-${id.toLowerCase()}`}>
+                        <div className="project-group-heading">
+                          <div>
+                            <p className="eyebrow">{id === 'Personal' ? 'INDEPENDENT WORK' : 'COMPANY PROJECTS'}</p>
+                            <h4 id={`project-group-${id.toLowerCase()}`}>{heading}</h4>
+                          </div>
+                          <span>{String(groupProjects.length).padStart(2, '0')} {groupProjects.length === 1 ? 'project' : 'projects'}</span>
+                        </div>
+                        <div className="projects-grid directory-grid">
+                          <AnimatePresence mode="sync">
+                            {groupProjects.map((project) => (
+                              <ProjectCard
+                                key={project.id}
+                                project={project}
+                                index={projects.indexOf(project)}
+                                onOpen={setSelectedProject}
+                              />
+                            ))}
+                          </AnimatePresence>
+                        </div>
+                      </section>
+                    ))}
                   </div>
                 ) : (
                   <div className="project-empty-state">
@@ -950,7 +970,7 @@ function App() {
               </motion.div>
             )}
           </AnimatePresence>
-          <div className="project-footnote"><span><Check size={14} /></span> Descriptions are based on résumé details. Personal and other projects can be added when you share them.</div>
+          <div className="project-footnote"><span><Check size={14} /></span> Browse by employer or view the personal portfolio; live links are included where available.</div>
         </section>
 
         <section className="section-shell section-block credentials-section">
@@ -1054,9 +1074,6 @@ function App() {
 
       <SkillsDialog open={skillsOpen} onClose={closeSkills} />
       <ProjectDialog key={selectedProject?.id ?? 'closed'} project={selectedProject} onClose={closeProject} />
-      <AnimatePresence>
-        {challengeOpen && <ProjectChallenge onClose={closeChallenge} onUnlock={unlockProjects} />}
-      </AnimatePresence>
     </>
   )
 }
