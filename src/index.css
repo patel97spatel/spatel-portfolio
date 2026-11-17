@@ -373,6 +373,7 @@ body.dialog-open .page-jump { display: none; }
 
 .dialog-backdrop { position: fixed; z-index: 50; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: 24px; background: rgba(7, 7, 11, 0.79); backdrop-filter: blur(9px); }
 .project-dialog { width: min(570px, 100%); max-height: min(90vh, 900px); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(198, 178, 255, 0.25); border-radius: 11px; background: #17171e; box-shadow: 0 25px 90px rgba(0, 0, 0, 0.52); }
+.project-dialog-detailed { width: min(820px, 100%); }
 .dialog-topline { min-height: 49px; display: flex; align-items: center; justify-content: space-between; padding: 0 17px; border-bottom: 1px solid var(--line); color: #9994aa; font-family: var(--mono); font-size: 9px; }
 .dialog-topline > span { display: flex; align-items: center; gap: 8px; }
 .dialog-topline svg { color: #b39fff; }
@@ -393,6 +394,17 @@ body.dialog-open .page-jump { display: none; }
 .project-detail-grid > div { min-width: 0; display: flex; flex-direction: column; gap: 7px; padding: 11px; border: 1px solid rgba(235, 230, 255, 0.08); border-radius: 5px; background: rgba(255, 255, 255, 0.018); }
 .project-detail-grid span { color: #8e87a1; font-family: var(--mono); font-size: 7px; letter-spacing: 0.08em; }
 .project-detail-grid strong { color: #c9c5d2; font-size: 9px; font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
+.project-dialog-links { display: flex; flex-wrap: wrap; gap: 18px; }
+.project-case-section { margin-top: 23px; }
+.project-case-section > .eyebrow { margin-bottom: 10px; }
+.project-tech-grid, .project-feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.project-tech-group, .project-feature-card { min-width: 0; padding: 12px; border: 1px solid rgba(235, 230, 255, 0.08); border-radius: 6px; background: rgba(255, 255, 255, 0.018); }
+.project-tech-group h3, .project-feature-card h3 { margin: 0 0 10px; color: #dedbe7; font-size: 10px; font-weight: 500; }
+.project-tech-group .project-stack { gap: 5px; }
+.project-tech-group .project-stack span { padding: 4px 6px; font-size: 8px; }
+.project-feature-card ul, .project-contribution-list { display: grid; gap: 7px; margin: 0; padding-left: 15px; color: #aaa6b4; font-size: 9px; line-height: 1.6; }
+.project-feature-card li::marker, .project-contribution-list li::marker { color: var(--accent-text); }
+.project-contribution-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 22px; padding-left: 17px; }
 .project-archive { margin-top: 21px; padding: 13px 14px; border: 1px solid rgba(235, 230, 255, 0.08); border-radius: 6px; background: rgba(255, 255, 255, 0.018); }
 .project-archive ul { display: grid; gap: 9px; margin: 12px 0 0; padding-left: 17px; color: #b6b2c0; font-size: 10px; line-height: 1.5; }
 .project-archive li::marker { color: #9c8fd0; }
@@ -493,6 +505,8 @@ body.dialog-open .page-jump { display: none; }
   .project-filters { gap: 5px; }
   .project-filter { gap: 6px; padding: 8px; font-size: 8px; }
   .project-detail-grid { grid-template-columns: 1fr; }
+  .project-contribution-list { grid-template-columns: 1fr; }
+  .project-feature-grid { grid-template-columns: 1fr; }
   .project-archive-toggle { align-items: flex-start; flex-direction: column; }
   .project-art { height: 120px; }
   .credentials-grid { grid-template-columns: 1fr; gap: 58px; }
@@ -587,6 +601,7 @@ html[data-theme='light'] .marquee-track span { color: #575462; }
 html[data-theme='light'] .marquee-track i { color: var(--accent-text); }
 html[data-theme='light'] .floating-chip { color: #393644; }
 html[data-theme='light'] .contact-form, html[data-theme='light'] .project-search, html[data-theme='light'] .project-detail-grid > div, html[data-theme='light'] .project-archive { border-color: var(--line); background: #f8f7fa; }
+html[data-theme='light'] .project-tech-group, html[data-theme='light'] .project-feature-card { border-color: var(--line); background: #f8f7fa; }
 html[data-theme='light'] .project-group + .project-group { border-color: var(--line); }
 html[data-theme='light'] .project-group-heading > span { color: #625f6e; }
 html[data-theme='light'] .button-quiet, html[data-theme='light'] .button-secondary, html[data-theme='light'] .contact-link, html[data-theme='light'] .project-filter { border-color: var(--line); color: #454251; background: rgba(255, 255, 255, 0.78); }
@@ -609,7 +624,8 @@ html[data-theme='light'] .contact-form input, html[data-theme='light'] .contact-
 html[data-theme='light'] .project-search input::placeholder, html[data-theme='light'] .contact-form input::placeholder, html[data-theme='light'] .contact-form textarea::placeholder { color: #777382; }
 html[data-theme='light'] .timeline-marker { background: #ffffff; }
 html[data-theme='light'] .project-dialog, html[data-theme='light'] .challenge-dialog, html[data-theme='light'] .skills-dialog { border-color: var(--line); background: #ffffff; }
-html[data-theme='light'] .dialog-topline, html[data-theme='light'] .project-type, html[data-theme='light'] .case-study-note, html[data-theme='light'] .project-detail-grid span, html[data-theme='light'] .project-detail-grid strong { color: #625f6e; }
+html[data-theme='light'] .dialog-topline, html[data-theme='light'] .project-type, html[data-theme='light'] .case-study-note, html[data-theme='light'] .project-detail-grid span, html[data-theme='light'] .project-detail-grid strong, html[data-theme='light'] .project-feature-card ul, html[data-theme='light'] .project-contribution-list { color: #625f6e; }
+html[data-theme='light'] .project-tech-group h3, html[data-theme='light'] .project-feature-card h3 { color: #292735; }
 html[data-theme='light'] .terminal-response, html[data-theme='light'] .challenge-status, html[data-theme='light'] .skills-code-window, html[data-theme='light'] .skill-filters { border-color: var(--line); color: #454251; background: #f5f4f8; }
 html[data-theme='light'] .terminal-response p, html[data-theme='light'] .skills-code, html[data-theme='light'] .project-archive ul { color: #454251; }
 html[data-theme='light'] .terminal-prompt, html[data-theme='light'] .dialog-topline svg, html[data-theme='light'] .skills-filebar svg, html[data-theme='light'] .skill-filter.is-active > span { color: var(--accent-text); }

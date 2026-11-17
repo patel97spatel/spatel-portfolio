@@ -396,7 +396,7 @@ function ProjectDialog({ project, onClose }) {
         >
           <motion.section
             ref={dialogRef}
-            className="project-dialog"
+            className={project.technologyGroups ? 'project-dialog project-dialog-detailed' : 'project-dialog'}
             role="dialog"
             aria-modal="true"
             aria-labelledby="dialog-title"
@@ -420,19 +420,66 @@ function ProjectDialog({ project, onClose }) {
                 <p><span className="terminal-check">✓</span> {project.company} / {project.role}</p>
                 <p><span className="terminal-check">✓</span> {typedMessage}<span className="typing-cursor" aria-hidden="true" /></p>
               </div>
-              <p className="dialog-overview">{project.description}</p>
+              <p className="dialog-overview">{project.overview || project.description}</p>
               <div className="project-detail-grid">
-                <div><span>CONTRIBUTION</span><strong>{project.role}</strong></div>
+                <div><span>ROLE</span><strong>{project.role}</strong></div>
+                {project.contribution && <div><span>CONTRIBUTION</span><strong>{project.contribution}</strong></div>}
                 <div><span>ORGANIZATION</span><strong>{project.company}</strong></div>
                 <div><span>PERIOD</span><strong>{project.period}</strong></div>
                 <div><span>DOMAIN / LOCATION</span><strong>{project.domain} · {project.location}</strong></div>
               </div>
-              {project.url && (
-                <a className="project-dialog-link" href={project.url} target="_blank" rel="noopener noreferrer">
-                  Visit project website <ArrowUpRight size={15} />
-                </a>
+              {(project.url || project.applicationUrl) && (
+                <div className="project-dialog-links">
+                  {project.url && (
+                    <a className="project-dialog-link" href={project.url} target="_blank" rel="noopener noreferrer">
+                      Visit website <ArrowUpRight size={15} />
+                    </a>
+                  )}
+                  {project.applicationUrl && (
+                    <a className="project-dialog-link" href={project.applicationUrl} target="_blank" rel="noopener noreferrer">
+                      Application login <ArrowUpRight size={15} />
+                    </a>
+                  )}
+                </div>
               )}
-              <p className="case-study-note">Project summary based on the project context and information currently available.</p>
+              {project.technologyGroups && (
+                <section className="project-case-section" aria-labelledby="project-stack-title">
+                  <p className="eyebrow" id="project-stack-title">TECHNOLOGY STACK</p>
+                  <div className="project-tech-grid">
+                    {project.technologyGroups.map((group) => (
+                      <div className="project-tech-group" key={group.name}>
+                        <h3>{group.name}</h3>
+                        <div className="project-stack">
+                          {group.items.map((item) => <span key={item}>{item}</span>)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+              {project.featureGroups && (
+                <section className="project-case-section" aria-labelledby="project-features-title">
+                  <p className="eyebrow" id="project-features-title">KEY FEATURES &amp; MODULES</p>
+                  <div className="project-feature-grid">
+                    {project.featureGroups.map((group) => (
+                      <article className="project-feature-card" key={group.name}>
+                        <h3>{group.name}</h3>
+                        <ul>
+                          {group.items.map((item) => <li key={item}>{item}</li>)}
+                        </ul>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+              {project.deliveryHighlights && (
+                <section className="project-case-section" aria-labelledby="project-contribution-title">
+                  <p className="eyebrow" id="project-contribution-title">DELIVERY &amp; CONTRIBUTION</p>
+                  <ul className="project-contribution-list">
+                    {project.deliveryHighlights.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </section>
+              )}
             </div>
             <button className="button button-secondary dialog-close" type="button" onClick={onClose}>
               Back to projects <ArrowRight size={16} />
