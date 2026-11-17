@@ -160,7 +160,8 @@ export const projects = [
     period: 'May 2024 – Present',
     domain: 'Software · Client project',
     location: 'United States',
-    description: 'A U.S.-based client project delivered through Gemini Consulting & Services India.',
+    featured: true,
+    description: 'A software project for a U.S.-based client, delivered through Gemini Consulting & Services India as part of my Associate Software Engineer role.',
   },
   {
     id: 'nag-associates',
